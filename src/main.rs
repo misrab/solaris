@@ -1,6 +1,10 @@
+
 use std::process::{ Command, Output };
 use std::str;
 use std::io;
+
+extern crate rand;
+use rand::distributions::{Bernoulli, Distribution};
 
 fn get_terminal_cols() -> Result<u32, io::Error> {
   match Command::new("tput").arg("cols").output() {
@@ -16,13 +20,23 @@ fn get_terminal_cols() -> Result<u32, io::Error> {
   }
 }
 
+fn sample_char() -> String {
+  let d = Bernoulli::new(0.5).unwrap();
+  match d.sample(&mut rand::thread_rng()) {
+    true => "-".to_string(),
+    false => "|".to_string(),
+    _ => "-".to_string(),
+  }
+}
 
 fn random_row(cols: u32) -> String {
-  (0..cols).map(|_| "m").collect()
+  (0..cols).map(|_| sample_char()).collect()
 }
 
 fn main() {
   let cols = get_terminal_cols().unwrap();
   
-  println!("{}", random_row(cols)); 
+  for _ in 0..5{ 
+      println!("{}", random_row(cols)); 
+  }
 }
