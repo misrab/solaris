@@ -1,8 +1,0 @@
-extern crate solaris;
-
-fn main() {
-  println!("hello");
-  solaris::primo::print_random_pattern();
-
-  solaris::gui::draw_ui()
-}

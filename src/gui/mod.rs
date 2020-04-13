@@ -10,15 +10,16 @@ use std::{
     //thread,
     //time::Duration,
 };
+use tui::backend::Backend;
+use tui::Frame;
 use tui::{backend::CrosstermBackend, Terminal};
-use tui::widgets::{Widget, Block, Borders};
-use tui::layout::{Layout, Constraint, Direction};
-
-/*enum Event<I> {*/
-    //Input(I),
-    //Tick,
-/*}*/
-
+use tui::style::{Color, Style};
+use tui::widgets::{
+    Widget, Block, Borders, Text, Paragraph,
+};
+use tui::layout::{
+    Layout, Constraint, Direction,
+};
 
 fn new_crossterm() -> Result<tui::terminal::Terminal<tui::backend::CrosstermBackend<std::io::Stdout>>, Box<dyn Error>> {
     enable_raw_mode()?;
@@ -33,16 +34,28 @@ fn new_crossterm() -> Result<tui::terminal::Terminal<tui::backend::CrosstermBack
     Ok(Terminal::new(backend)?)
 }
 
-pub fn draw_ui() -> Result<(), Box<dyn Error>> {
-  let mut terminal = new_crossterm()?;
-  
-  terminal.draw(|mut f| {
+
+fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>) {
     let size = f.size();
-    Block::default()
+    let mut block = Block::default()
         .title("Block")
-        .borders(Borders::ALL)
-        .render(&mut f, size);
-  });
+        .borders(Borders::ALL);
+
+    let text = [ Text::raw("testing"), Text::styled("\nsecond", Style::default().fg(Color::Blue)), ];
+    let mut paragraph = Paragraph::new(text.iter()).block(block).wrap(true);
+    
+    paragraph.render(&mut f, size);
+}
+
+pub fn initialise_ui() -> Result<(), Box<dyn Error>> {
+  let mut terminal = new_crossterm()?;
+ 
+  terminal.clear()?;
+
+  terminal.draw(|mut f| draw(&mut f));
+
+
+
 
   Ok(())
 }
