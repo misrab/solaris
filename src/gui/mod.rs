@@ -10,7 +10,7 @@ use std::{
     //thread,
     //time::Duration,
 };
-use tui::backend::Backend;
+//use tui::backend::Backend;
 use tui::Frame;
 use tui::{backend::CrosstermBackend, Terminal};
 use tui::style::{Color, Style};
@@ -35,15 +35,19 @@ fn new_crossterm() -> Result<tui::terminal::Terminal<tui::backend::CrosstermBack
 }
 
 
-fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>, app: &mut App) {
+fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>, app: &App) {
     let size = f.size();
-    let mut block = Block::default()
+    let block = Block::default()
         .title("Block")
         .borders(Borders::ALL);
 
     let mut text = Vec::<Text>::new();
-    for s in &app.messages {
-      text.push(Text::raw(s));
+    for (i, s) in app.messages.iter().enumerate() {
+      let mut s2 = s.clone();
+      if i > 0 {
+          s2.insert_str(0, "\n");
+      }
+      text.push(Text::raw(s2));
     }
 
     //let text = [ Text::raw("testing"), Text::styled("\nsecond", Style::default().fg(Color::Blue)), ];
@@ -52,36 +56,47 @@ fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>, app: &mut App) {
     paragraph.render(&mut f, size);
 }
 
-pub fn initialise_ui() -> Result<(), Box<dyn Error>> {
-  let mut terminal = new_crossterm()?;
+/*pub fn initialise_ui() -> Result<(), Box<dyn Error>> {*/
+  //let mut terminal = new_crossterm()?;
  
-  terminal.clear()?;
+  //terminal.clear()?;
 
-  let mut app = App::new();
-  app.add_message("hello".to_string());
+  //let mut app = App::new();
+  //app.add_message("hello".to_string());
 
-  terminal.draw(|mut f| draw(&mut f, &mut app));
+  //terminal.draw(|mut f| draw(&mut f, &mut app));
+  //Ok(())
+/*}*/
 
-
-
-
-  Ok(())
+pub struct UI {
+  terminal: tui::terminal::Terminal<tui::backend::CrosstermBackend<std::io::Stdout>>,
 }
 
+impl UI {
+  pub fn new() -> Self {
+    let mut terminal = new_crossterm().unwrap();
+    terminal.clear().unwrap();
+  
+    UI{
+      terminal: terminal,
+    }
+  }
+}
 
 pub struct App {
   messages: Vec<String>,
 }
 
 impl App {
-  fn new() -> Self {
+  pub fn new() -> Self {
     App{
       messages: Vec::new(),
     }
   }
 
-  fn add_message(&mut self, s: String) {
-    self.messages.push(s);
+  pub fn add_message(&mut self, ui: &mut UI, s: &str) {
+    self.messages.push(s.to_string());
+    ui.terminal.draw(|mut f| draw(&mut f, &self));
   }
 }
 

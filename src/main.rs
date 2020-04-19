@@ -4,5 +4,7 @@ fn main() {
   println!("hello");
   solaris::primo::print_random_pattern();
 
-  let _ = solaris::gui::initialise_ui();
+  let mut ui = solaris::gui::UI::new();
+  let mut app = solaris::gui::App::new();
+  app.add_message(&mut ui, "hullo");
 }
