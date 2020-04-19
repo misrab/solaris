@@ -35,13 +35,18 @@ fn new_crossterm() -> Result<tui::terminal::Terminal<tui::backend::CrosstermBack
 }
 
 
-fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>) {
+fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>, app: &mut App) {
     let size = f.size();
     let mut block = Block::default()
         .title("Block")
         .borders(Borders::ALL);
 
-    let text = [ Text::raw("testing"), Text::styled("\nsecond", Style::default().fg(Color::Blue)), ];
+    let mut text = Vec::<Text>::new();
+    for s in &app.messages {
+      text.push(Text::raw(s));
+    }
+
+    //let text = [ Text::raw("testing"), Text::styled("\nsecond", Style::default().fg(Color::Blue)), ];
     let mut paragraph = Paragraph::new(text.iter()).block(block).wrap(true);
     
     paragraph.render(&mut f, size);
@@ -52,13 +57,34 @@ pub fn initialise_ui() -> Result<(), Box<dyn Error>> {
  
   terminal.clear()?;
 
-  terminal.draw(|mut f| draw(&mut f));
+  let mut app = App::new();
+  app.add_message("hello".to_string());
+
+  terminal.draw(|mut f| draw(&mut f, &mut app));
 
 
 
 
   Ok(())
 }
+
+
+pub struct App {
+  messages: Vec<String>,
+}
+
+impl App {
+  fn new() -> Self {
+    App{
+      messages: Vec::new(),
+    }
+  }
+
+  fn add_message(&mut self, s: String) {
+    self.messages.push(s);
+  }
+}
+
 
 #[test]
 fn test_run() -> Result<(), Box<dyn Error>> {
