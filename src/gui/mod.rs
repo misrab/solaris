@@ -38,7 +38,7 @@ fn new_crossterm() -> Result<tui::terminal::Terminal<tui::backend::CrosstermBack
 fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>, app: &App) {
     let size = f.size();
     let block = Block::default()
-        .title("Block")
+        .title("Messages")
         .borders(Borders::ALL);
 
     let mut text = Vec::<Text>::new();
@@ -54,19 +54,12 @@ fn draw(mut f: &mut Frame<CrosstermBackend<std::io::Stdout>>, app: &App) {
     let mut paragraph = Paragraph::new(text.iter()).block(block).wrap(true);
     
     paragraph.render(&mut f, size);
+
+
+    
+
+
 }
-
-/*pub fn initialise_ui() -> Result<(), Box<dyn Error>> {*/
-  //let mut terminal = new_crossterm()?;
- 
-  //terminal.clear()?;
-
-  //let mut app = App::new();
-  //app.add_message("hello".to_string());
-
-  //terminal.draw(|mut f| draw(&mut f, &mut app));
-  //Ok(())
-/*}*/
 
 pub struct UI {
   terminal: tui::terminal::Terminal<tui::backend::CrosstermBackend<std::io::Stdout>>,

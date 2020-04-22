@@ -14,3 +14,5 @@ pub mod primo;
 // a terminal gui for chat
 pub mod gui;
 
+// p2p messaging experiment
+pub mod messaging;
