@@ -16,3 +16,5 @@ pub mod gui;
 
 // p2p messaging experiment
 pub mod messaging;
+
+pub mod datarythms;
