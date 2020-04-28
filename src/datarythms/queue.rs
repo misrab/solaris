@@ -2,6 +2,8 @@ pub struct Queue<T> {
   data: Vec<T>,
 }
 
+// This is implemented with 
+// slow push, fast pop
 impl<T> Queue<T> {
   fn new() -> Self {
     Queue{
@@ -9,12 +11,14 @@ impl<T> Queue<T> {
     }
   }
 
+  // currently O(1)
   fn pop(&mut self) -> Option<T> {
     self.data.pop()
   }
-  
+ 
+  // currently O(n): shift all elems right
   fn push(&mut self, v: T) {
-    self.data.push(v);
+    self.data.insert(0, v);
   }
 }
 
