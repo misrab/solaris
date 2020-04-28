@@ -1,10 +1,10 @@
-pub struct Queue<T> {
+pub struct Stack<T> {
   data: Vec<T>,
 }
 
-impl<T> Queue<T> {
+impl<T> Stack<T> {
   fn new() -> Self {
-    Queue{
+    Stack{
       data: Vec::new(),
     }
   }
@@ -21,23 +21,23 @@ impl<T> Queue<T> {
 
 #[test]
 fn test_new() {
-  let _ = Queue::<u8>::new();
+  let _ = Stack::<u8>::new();
 }
 
 #[test]
 fn test_pop_empty() {
-  let mut q = Queue::<u8>::new();
+  let mut q = Stack::<u8>::new();
   let result = q.pop();
   assert_eq!(None, result);
 }
 
 #[test]
 fn test_push_pops() {
-  let mut q = Queue::<u8>::new();
-  q.push(1);
-  q.push(2);
-  assert_eq!(q.pop(), Some(1));
-  assert_eq!(q.pop(), Some(2));
-  assert_eq!(q.pop(), None);
+  let mut s = Stack::<u8>::new();
+  s.push(1);
+  s.push(2);
+  assert_eq!(s.pop(), Some(2));
+  assert_eq!(s.pop(), Some(1));
+  assert_eq!(s.pop(), None);
 }
 
